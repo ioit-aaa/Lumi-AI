@@ -1,4 +1,4 @@
-name: Build App Release
+name: Build App Debug
 
 on:
   workflow_dispatch:
@@ -24,23 +24,13 @@ jobs:
           distribution: "temurin"
           cache: gradle          
                     
-      - name: Compile
+      - name: Compile Debug
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
 
-      - name: Sign Apk
-        uses: ilharp/sign-android-release@v2
-        id: sign_app
-        with:
-          releaseDir: app/build/outputs/apk/release
-          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
-          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
-      - name: Upload Signed APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: apk-release
-          path: ${{steps.sign_app.outputs.signedFile}}
+          name: apk-debug
+          path: app/build/outputs/apk/debug/*.apk
